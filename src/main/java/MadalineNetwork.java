@@ -12,10 +12,6 @@ public class MadalineNetwork {
     private int networkX;
     private int networkY;
 
-    /**
-     * Constructs MADALINE network (teaches) using provided file
-     * @param inputFile input file
-     */
     public MadalineNetwork(File inputFile) {
 
         FileReader reader;
@@ -34,7 +30,7 @@ public class MadalineNetwork {
                 String name = in.next();
                 int sum = 0;
 
-                for(int j = 0; j < networkX; j++) {
+                for (int j = 0; j < networkX; j++) {
                     char[] inputArray = in.next().toCharArray();
 
                     for (int k = 0; k < networkY; k++) {
@@ -46,9 +42,9 @@ public class MadalineNetwork {
                         }
                     }
                 }
-                double normalizer = sum == 0 ? 0 : 1/Math.sqrt(sum);
+                double normalizer = sum == 0 ? 0 : 1 / Math.sqrt(sum);
 
-                inputValues = inputValues.stream().map(x -> x*normalizer).collect(Collectors.toList());
+                inputValues = inputValues.stream().map(x -> x * normalizer).collect(Collectors.toList());
                 copyingNeurons.add(new Neuron(inputValues, name));
             }
         } catch (IOException e) {
@@ -56,11 +52,28 @@ public class MadalineNetwork {
         }
     }
 
-    /**
-     * Private method to get output Neurons based on a file
-     * @param inputFile file to examine
-     * @return list of output neurons
-     */
+    public void showOutput(File inputFile) {
+        List<Neuron> outputNeurons = getOutputNeurons(inputFile);
+
+        outputNeurons.forEach(oNeuron -> {
+            double[] highest = {0.0};
+            String[] highestName = {""};
+            System.out.println(oNeuron.getName() + ":");
+
+            copyingNeurons.forEach(cNeuron -> {
+                double output = cNeuron.calculateOutput(oNeuron.getWeights());
+                System.out.println("Neuron " + cNeuron.getName() + " has given output of " + output);
+
+                if (output > highest[0]) {
+                    highest[0] = output;
+                    highestName[0] = cNeuron.getName();
+                }
+            });
+            System.out.println("=> Network has recognized letter " + highestName[0] +
+                    ".\nLevel of confidence = " + highest[0]);
+        });
+    }
+
     private List<Neuron> getOutputNeurons(File inputFile) {
 
         List<Neuron> outputNeurons = new ArrayList<>();
@@ -71,7 +84,7 @@ public class MadalineNetwork {
 
             int outputNumber = in.nextInt();
 
-            for(int i = 0; i < outputNumber; i++) {
+            for (int i = 0; i < outputNumber; i++) {
                 in.nextLine();
 
                 List<Double> outputValues = new ArrayList<>();
@@ -80,7 +93,7 @@ public class MadalineNetwork {
                 for (int j = 0; j < networkX; j++) {
                     char[] inputArray = in.next().toCharArray();
 
-                    for ( int k = 0; k < networkY; k++) {
+                    for (int k = 0; k < networkY; k++) {
                         if (inputArray[k] == '#') {
                             sum++;
                             outputValues.add(1.0);
@@ -89,39 +102,13 @@ public class MadalineNetwork {
                         }
                     }
                 }
-                double normalizer = 1/Math.sqrt(sum);
-                outputValues = outputValues.stream().map(x -> x*normalizer).collect(Collectors.toList());
+                double normalizer = 1 / Math.sqrt(sum);
+                outputValues = outputValues.stream().map(x -> x * normalizer).collect(Collectors.toList());
                 outputNeurons.add(new Neuron(outputValues, i + 1 + " test pattern"));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return outputNeurons;
-    }
-
-    /**
-     * Calculates and shows the result of testing process
-     * @param inputFile file to examine
-     */
-    public void showOutput(File inputFile) {
-        List<Neuron> outputNeurons = getOutputNeurons(inputFile);
-
-        outputNeurons.forEach(oNeuron -> {
-            double[] highest = {0.0};   // Array initilizer, because should final or effectively final
-            String[] highestName = {""};
-            System.out.println(oNeuron.getName() + ":");
-
-            copyingNeurons.forEach(cNeuron -> {
-                double output = cNeuron.calculateOutput(oNeuron.getWeights());
-                System.out.println("Neuron " + cNeuron.getName() + " has given output of " + output);
-
-                if(output > highest[0]) {
-                    highest[0] = output;
-                    highestName[0] = cNeuron.getName();
-                }
-            });
-            System.out.println("=> Network has recognized letter " + highestName[0] +
-                    ".\nLevel of confidence = " + highest[0]);
-        });
     }
 }
