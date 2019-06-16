@@ -3,13 +3,13 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Neuron {
+class Neuron {
 
     private Integer numberOfInputs;
     private List<Double> weights;
     String name;
 
-    public Neuron(List<Double> weights, String name) {
+    Neuron(List<Double> weights, String name) {
         this.numberOfInputs = weights.size();
         this.weights = weights;
         this.name = name;
@@ -21,7 +21,6 @@ public class Neuron {
         }
 
         double output = 0.;
-
         for (int i = 0; i < getNumberOfInputs(); i++) {
             output += inputs.get(i) * getWeights().get(i);
         }
