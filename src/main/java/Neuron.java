@@ -3,13 +3,13 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Neuron {
+class Neuron {
 
     private Integer numberOfInputs;
     private List<Double> weights;
     String name;
 
-    public Neuron(List<Double> weights, String name) {
+    Neuron(List<Double> weights, String name) {
         this.numberOfInputs = weights.size();
         this.weights = weights;
         this.name = name;

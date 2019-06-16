@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class MadalineNetwork {
+class MadalineNetwork {
 
     private List<Neuron> copyingNeurons;
     private int networkX;
     private int networkY;
 
-    public MadalineNetwork(File inputFile) {
+    MadalineNetwork(File inputFile) {
 
         FileReader reader;
         try {
@@ -52,7 +52,7 @@ public class MadalineNetwork {
         }
     }
 
-    public void showOutput(File inputFile) {
+    void showOutput(File inputFile) {
         List<Neuron> outputNeurons = getOutputNeurons(inputFile);
 
         outputNeurons.forEach(oNeuron -> {
